@@ -1,5 +1,10 @@
-bcms_feeds
+Feed Module
 ==========
+
+This is a fork of https://github.com/jonleighton/bcms_feeds which updates the module to work with BrowserCMS 3.5.x and later. It will be released as bcms_feeds_bmedia since the original gem is owned by jonleighton.
+
+Overview
+========
 
 This is a BrowserCMS module which fetches, caches and displays RSS/Atom feeds.
 
