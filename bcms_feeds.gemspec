@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "bcms_feeds/version"
 
 Gem::Specification.new do |s|
-  s.name = %q{bcms_feeds}
+  s.name = %q{bcms_bmedia_feeds}
   s.version = BcmsFeeds::VERSION 
 
   s.authors = ["Jon Leighton", "BrowserMedia"]
@@ -20,6 +20,6 @@ Gem::Specification.new do |s|
   s.files += Dir["Gemfile", "LICENSE.txt", "COPYRIGHT.txt", "GPL.txt" ]
 
   s.add_dependency("browsercms", "< 3.6.0", ">= 3.5.0")
-  s.add_dependency(%q<simple-rss>, "~> 1.2.3")
+  s.add_dependency("simple-rss", "~> 1.2.3")
 
 end
