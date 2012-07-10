@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    bcms_feeds (2.0.0)
+    bcms_bmedia_feeds (2.0.0)
       browsercms (>= 3.5.0, < 3.6.0)
       simple-rss (~> 1.2.3)
 
@@ -65,7 +65,7 @@ GEM
       treetop (~> 1.4.8)
     metaclass (0.0.1)
     mime-types (1.19)
-    mocha (0.11.4)
+    mocha (0.12.0)
       metaclass (~> 0.0.1)
     multi_json (1.3.6)
     paperclip (3.0.4)
@@ -123,7 +123,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bcms_feeds!
+  bcms_bmedia_feeds!
   jquery-rails
   mocha
   sqlite3

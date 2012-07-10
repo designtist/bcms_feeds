@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "bcms_feeds/version"
 
 Gem::Specification.new do |s|
-  s.name = %q{bcms_bmedia_feeds}
+  s.name = "bcms_bmedia_feeds"
   s.version = BcmsFeeds::VERSION 
 
   s.authors = ["Jon Leighton", "BrowserMedia"]

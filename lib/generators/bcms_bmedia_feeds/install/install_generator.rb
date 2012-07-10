@@ -1,6 +1,8 @@
 require 'cms/module_installation'
 
-class BcmsFeeds::InstallGenerator < Cms::ModuleInstallation
+module BcmsBmediaFeeds
+end
+class BcmsBmediaFeeds::InstallGenerator < Cms::ModuleInstallation
   add_migrations_directory_to_source_root __FILE__
   
   

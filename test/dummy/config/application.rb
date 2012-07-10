@@ -3,7 +3,7 @@ require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 
 Bundler.require
-require "bcms_feeds"
+require "bcms_bmedia_feeds"
 
 module Dummy
   class Application < Rails::Application
