@@ -14,14 +14,14 @@ class FeedTest < ActiveSupport::TestCase
   end
   
   test "remote_contents should fetch the feed" do
-    @feed.expects(:open).with("http://example.com/blog.rss").returns(stub(:read => @contents))
+    @feed.expects(:simple_get).with("http://example.com/blog.rss").returns(@contents)
     assert_equal @contents, @feed.remote_contents
   end
   
   test "remote_contents should raise a Timeout::Error if fetching the feed takes longer then Feed::TIMEOUT" do
-    def @feed.open(url)
+    def @feed.simple_get(url)
       sleep(2)
-      stubs(:read => "bla")
+      "This contents should never be returned"
     end
     
     assert_raise(Timeout::Error) { @feed.remote_contents }
@@ -52,7 +52,7 @@ class FeedTest < ActiveSupport::TestCase
   
   test "contents with the expiry in the future should return the cached contents" do
     @feed.expires_at = Time.now + 1.hour
-    @feed.write_attribute(:contents, @contents)
+    @feed.contents =  @contents
     
     assert_equal @contents, @feed.contents
   end
@@ -61,7 +61,7 @@ class FeedTest < ActiveSupport::TestCase
     [StandardError, Timeout::Error, SimpleRSSError].each do |exception|
       @feed.expires_at = Time.now - 1.hour
       @feed.stubs(:remote_contents).raises(exception)
-      @feed.write_attribute(:contents, @contents)
+      @feed.contents = @contents
       
       assert_equal @contents, @feed.contents
       assert_equal Time.now.utc + Feed::TTL_ON_ERROR, @feed.expires_at

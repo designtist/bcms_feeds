@@ -8,6 +8,7 @@ class Feed < ActiveRecord::Base
   TIMEOUT = 10 # In seconds
   
   delegate :entries, :items, :to => :parsed_contents
+  attr_accessible :url, :contents, :expires_at
   
   def parsed_contents
     @parsed_contents ||= SimpleRSS.parse(contents)

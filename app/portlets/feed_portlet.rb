@@ -1,4 +1,4 @@
-class FeedPortlet < Portlet
+class FeedPortlet < Cms::Portlet
   handler "erb"
   
   def render
