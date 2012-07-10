@@ -1,1 +1,4 @@
-require 'bcms_feeds/routes'
+require "bcms_feeds/engine"
+
+module BcmsFeeds
+end

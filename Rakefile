@@ -1,32 +1,40 @@
-# Add your own tasks in files placed in lib/tasks ending in .rake,
-# for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
-
-require(File.join(File.dirname(__FILE__), 'config', 'boot'))
-
-require 'rake'
-require 'rake/testtask'
-require 'rake/rdoctask'
-
-require 'tasks/rails'
-
+#!/usr/bin/env rake
 begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gemspec|
-    gemspec.name = "bcms_feeds"
-    gemspec.summary = "Feeds in BrowserCMS"
-    gemspec.description = "A BrowserCMS module which fetches, caches and displays RSS/Atom feeds"
-    gemspec.email = "j@jonathanleighton.com"
-    gemspec.homepage = "http://github.com/jonleighton/bcms_feeds"
-    gemspec.authors = ["Jon Leighton"]
-    gemspec.files = Dir["app/**/*"]
-    gemspec.files += Dir["lib/**/*"]
-    gemspec.files += Dir["db/migrate/*.rb"]
-    gemspec.files -= Dir["db/migrate/*_browsercms_*.rb"]
-    gemspec.files -= Dir["db/migrate/*_load_seed_data.rb"]
-    gemspec.files += Dir["rails/init.rb"]
-    gemspec.add_dependency('simple-rss')
-  end
+  require 'bundler/setup'
 rescue LoadError
-  puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
+  puts 'You must `gem install bundler` and `bundle install` to run rake tasks'
+end
+begin
+  require 'rdoc/task'
+rescue LoadError
+  require 'rdoc/rdoc'
+  require 'rake/rdoctask'
+  RDoc::Task = Rake::RDocTask
 end
 
+RDoc::Task.new(:rdoc) do |rdoc|
+  rdoc.rdoc_dir = 'rdoc'
+  rdoc.title    = 'BcmsFeeds'
+  rdoc.options << '--line-numbers'
+  rdoc.rdoc_files.include('README.rdoc')
+  rdoc.rdoc_files.include('lib/**/*.rb')
+end
+
+APP_RAKEFILE = File.expand_path("../test/dummy/Rakefile", __FILE__)
+load 'rails/tasks/engine.rake'
+
+
+
+Bundler::GemHelper.install_tasks
+
+require 'rake/testtask'
+
+Rake::TestTask.new(:test => 'app:test:prepare') do |t|
+  t.libs << 'lib'
+  t.libs << 'test'
+  t.pattern = 'test/**/*_test.rb'
+  t.verbose = false
+end
+
+
+task :default => :test
