@@ -44,19 +44,20 @@ module BcmsFeeds
 
     def simple_get(url)
       logger.info("Loading feed from remote: #{url}")
-      parsed_url = URI.parse(url)
-      http = Net::HTTP.start(parsed_url.host, parsed_url.port)
-      response = http.request_get(url, 'User-Agent' => "BrowserCMS bcms_feed extension")
+      uri = URI(url)
+      http = Net::HTTP.new(uri.host, uri.port)
+      response = http.request_get(uri.request_uri, 'User-Agent' => "BrowserCMS bcms_feed extension")
+
       if response.is_a?(Net::HTTPSuccess)
         return response.body
       elsif response.is_a?(Net::HTTPRedirection)
-        logger.info("#{url} returned a redirect. Following . . ")
-        simple_get(response.header['Location'])
+        redirect_url = response.header['Location']
+        logger.info("#{url} returned a redirect. Following #{redirect_url} ")
+        simple_get(redirect_url)
       else
-        logger.info("#{url} returned a redirect. Following . . ")
+        logger.info("An expected response type occured for #{response.code}.")
         raise StandardError 
       end
     end
-
   end
 end
