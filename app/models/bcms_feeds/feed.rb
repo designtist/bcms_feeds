@@ -1,10 +1,11 @@
 require 'net/http'
 require 'timeout'
-require 'simple-rss'
+# require 'simple-rss'
+require 'rss'
 
 module BcmsFeeds
   class Feed < ActiveRecord::Base
-    TTL = 30.minutes
+    TTL = 2.hours
     TTL_ON_ERROR = 10.minutes
     TIMEOUT = 10 # In seconds
   
@@ -12,7 +13,8 @@ module BcmsFeeds
     attr_accessible :url, :contents, :expires_at
   
     def parsed_contents
-      @parsed_contents ||= SimpleRSS.parse(contents)
+      # @parsed_contents ||= SimpleRSS.parse(contents)
+      @parsed_contents ||= RSS::Parser.parse(contents)
     end
   
     def contents
@@ -20,10 +22,11 @@ module BcmsFeeds
         begin
           self.expires_at = Time.now.utc + TTL
           new_contents = remote_contents
-          SimpleRSS.parse(new_contents) # Check that we can actually parse it
+          # SimpleRSS.parse(new_contents) # Check that we can actually parse it
+          RSS::Parser.parse(new_contents) # Check that we can actually parse it
           write_attribute(:contents, new_contents)
           save
-        rescue StandardError, Timeout::Error, SimpleRSSError => exception
+        rescue StandardError, Timeout::Error, RSS::Error #SimpleRSSError => exception
           logger.error("Loading feed #{url} failed with #{exception.inspect}")
           self.expires_at = Time.now.utc + TTL_ON_ERROR
           save
@@ -46,6 +49,11 @@ module BcmsFeeds
       logger.info("Loading feed from remote: #{url}")
       uri = URI(url)
       http = Net::HTTP.new(uri.host, uri.port)
+      
+      if http.port == 443
+        http.use_ssl = true
+      end
+      
       response = http.request_get(uri.request_uri, 'User-Agent' => "BrowserCMS bcms_feed extension")
 
       if response.is_a?(Net::HTTPSuccess)
