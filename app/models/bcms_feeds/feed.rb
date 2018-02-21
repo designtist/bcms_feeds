@@ -43,6 +43,8 @@ module BcmsFeeds
       }
     end
 
+
+
     private
 
     def simple_get(url)
