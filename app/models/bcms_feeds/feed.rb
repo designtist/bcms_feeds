@@ -50,7 +50,7 @@ module BcmsFeeds
       uri = URI(url)
       http = Net::HTTP.new(uri.host, uri.port)
       
-      if http.port == 443
+      if uri.scheme == 'https'
         http.use_ssl = true
       end
       
